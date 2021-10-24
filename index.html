@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/vue@next"></script>
+    <title>タイピング練習</title>
+</head>
+<body>
+    <div id="app1" class="container">
+        <div class="title">
+            <h1>タイピングゲーム</h1>
+            <div class="marker"></div>
+        </div>
+
+        <button v-if="!startFlg" class="startbtn mb-20" @click="gameStart">スタート</button>
+        
+        <div v-if="startFlg">
+            <div class="question mb-20">{{ current_question }}</div>
+            <div class="clesar">クリア！！</div>
+            <div class="typeformupp mb-20">
+                <input v-model="typeBox" type="text" class="typeform">
+            </div>
+
+            <div class="gaugeupp mb-20">
+                <div class="gauge"></div>
+            </div>
+            <div>1/5</div>
+        </div>
+    </div>
+    <div id="app1">
+    </div>
+    <script>
+        const App1 = {
+            data() {
+                return{
+                    startFlg: "",
+                    current_question: "",
+                    questions:[
+                        'apple',
+                        'banana',
+                        'choco',
+                        'donut',
+                        'espresso',
+                    ],
+                    typeBox: "",
+                }
+            },
+            methods: {
+                gameStart: function() {
+                    this.startFlg = true;
+                }
+            },
+            mounted: function() {
+                this.current_question = this.questions[0]
+            },
+            watch: {
+                typeBox: function(e) {
+                    if(e == this.current_question) {
+                        this.questions.splice(0,1)
+                        this.current_question = this.questions[0]
+                        this.typeBox = ""
+                    }
+                }
+            }
+        }
+        app = Vue.createApp(App1)
+        app.mount('#app1')
+    </script>
+</body>
+</html>
