@@ -19,15 +19,15 @@
         
         <div v-if="startFlg">
             <div class="question mb-20">{{ current_question }}</div>
-            <div class="clesar">クリア！！</div>
+            <div v-if="current_question_count == questions_count" class="clesar">クリア！！</div>
             <div class="typeformupp mb-20">
-                <input v-model="typeBox" type="text" class="typeform">
+                <input id="typeForm" v-model="typeBox" type="text" class="typeform">
             </div>
 
             <div class="gaugeupp mb-20">
-                <div class="gauge"></div>
+                <div :style="styleObject" class="gauge"></div>
             </div>
-            <div>1/5</div>
+            <div>{{ current_question_count }}/{{ questions_count }}</div>
         </div>
     </div>
     <div id="app1">
@@ -46,15 +46,34 @@
                         'espresso',
                     ],
                     typeBox: "",
+                    current_question_count: 0,
+                    questions_count: 0,
+                }
+            },
+            computed: {
+                styleObject: function() {
+                    width = 20 * this.current_question_count + "%"
+                    if(this.current_question_count == 5) {
+                        color = "#03a9f4"
+                    }else{
+                        color = "orange"
+                    }return{
+                        'width': width,
+                        'background': color
+                    }
                 }
             },
             methods: {
                 gameStart: function() {
                     this.startFlg = true;
+                    this.$nextTick(function() {
+                        document.getElementById('typeForm').focus()
+                    })
                 }
             },
             mounted: function() {
                 this.current_question = this.questions[0]
+                this.questions_count = this.questions.length
             },
             watch: {
                 typeBox: function(e) {
@@ -62,6 +81,7 @@
                         this.questions.splice(0,1)
                         this.current_question = this.questions[0]
                         this.typeBox = ""
+                        this.current_question_count = this.current_question_count + 1
                     }
                 }
             }
